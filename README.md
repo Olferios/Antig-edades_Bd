@@ -60,6 +60,19 @@ where p.id =1;
 "Calcula el total de ventas realizadas en un período específico, por ejemplo, durante el último
 mes
 
+```
+SELECT 
+    SUM(tv.precioventa) AS total_ventas
+FROM 
+    transaccion_venta tv
+WHERE 
+    tv.fecha_venta BETWEEN '2024-08-01' AND '2024-08-31';
+```
+| Total ventas |
+|----|---------------|
+| 15.000 |
+
+
 
 ### 5. Consulta para encontrar los clientes más activos (con más compras realizadas):
 "Identifica los clientes que han realizado la mayor cantidad de compras en la plataforma."
@@ -93,6 +106,33 @@ parte de los usuarios.
 ### 7. Consulta para listar las antigüedades vendidas en un rango de fechas específico:
 "Obtén una lista de todas las piezas antiguas que se han vendido dentro de un rango de
 fechas específico, incluyendo la información del vendedor y comprador."
+
+```
+SELECT 
+    p.nombre AS nombre_pieza,
+    p.descripcion,
+    p.precio,
+    tv.fecha_venta,
+    v.nombre AS nombre_vendedor,
+    v.apellido AS apellido_vendedor,
+    c.nombre AS nombre_comprador,
+    c.apellido AS apellido_comprador
+FROM 
+    pieza p
+INNER JOIN 
+    transaccion_venta tv ON p.id = tv.idpieza
+INNER JOIN 
+    persona v ON tv.idpersona = v.id -- Suponiendo que el vendedor es la misma persona que el comprador
+INNER JOIN 
+    persona c ON tv.idpersona = c.id -- Asegúrate de ajustar esto si vendedor y comprador son diferentes
+WHERE 
+    tv.fecha_venta BETWEEN '2024-01-01' AND '2024-09-01';
+```
+| Nombre pieza              | Descripción                | Precio  | Fecha venta       | Nombre propietario | Apellido propietario | Nombre comprador| Apellido comprador|
+|----------------------|----------------------------|---------|-------------|----------|------------|----------|------------|
+| Pintura Renacentista | Pintura del siglo XV       | 50000.0 | 2024-02-05  | Juan     | Pérez      | Juan     | Pérez      |
+| Escultura Moderna    | Escultura contemporánea    | 15000.0 | 2024-08-28  | Ana      | García     | Ana      | García     |
+
 
 ### 8. Consulta para obtener un informe de inventario actual:
 "Genera un informe del inventario actual de antigüedades disponibles para la venta,
