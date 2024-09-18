@@ -56,6 +56,73 @@ where p.id =1;
 | Juan   | Pintura Renacentista  | 1        |
 
 
+### 4. Consulta para obtener el total de ventas realizadas en un periodo de tiempo:
+"Calcula el total de ventas realizadas en un período específico, por ejemplo, durante el último
+mes
+
+
+### 5. Consulta para encontrar los clientes más activos (con más compras realizadas):
+"Identifica los clientes que han realizado la mayor cantidad de compras en la plataforma."
+
+```
+SELECT 
+    p.id AS cliente_id,
+    CONCAT(p.nombre, ' ', p.apellido) AS cliente_nombre,
+    COUNT(tv.id) AS cantidad_compras
+FROM 
+    persona p
+INNER JOIN 
+    transaccion_venta tv ON p.id = tv.idpersona
+GROUP BY 
+    p.id, p.nombre, p.apellido
+ORDER BY 
+    cantidad_compras DESC
+LIMIT 1;
+
+```
+| ID | Nombre        | Cantidad |
+|----|---------------|----------|
+| 1  | Juan Pérez    | 1        |
+
+
+### 6. Consulta para listar las antigüedades más populares por número de visitas o consultas:
+"Muestra las piezas antiguas que han recibido la mayor cantidad de visitas o consultas por
+parte de los usuarios.
+
+
+### 7. Consulta para listar las antigüedades vendidas en un rango de fechas específico:
+"Obtén una lista de todas las piezas antiguas que se han vendido dentro de un rango de
+fechas específico, incluyendo la información del vendedor y comprador."
+
+### 8. Consulta para obtener un informe de inventario actual:
+"Genera un informe del inventario actual de antigüedades disponibles para la venta,
+mostrando la cantidad de artículos por categoría."
+
+```
+SELECT 
+    ta.nombre AS categoria_antiguedad,
+    ec.nombre AS estado_conservacion,
+    SUM(i.cantidad) AS cantidad_total
+FROM 
+    inventario i
+INNER JOIN 
+    pieza p ON i.idpieza = p.id
+INNER JOIN 
+    tipoantiguedad ta ON p.idtipoantiguedad = ta.id
+INNER JOIN 
+    estadoconservacion ec ON p.idestadoconservacion = ec.id
+WHERE 
+    i.idestado = (SELECT id FROM tipoestadopieza WHERE nombre = 'disponible')
+GROUP BY 
+    ta.nombre, ec.nombre
+ORDER BY 
+    ta.nombre, ec.nombre;
+```
+| Tipo de Antigüedad | Estado de Conservación | Cantidad |
+|--------------------|------------------------|----------|
+| Antiguo            | Antiguo                | 2        |
+| Antiguo            | Nuevo                  | 1        |
+| Antiguo            | Usado                  | 5        |
 
 
 
